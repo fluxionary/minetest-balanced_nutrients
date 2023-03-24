@@ -652,8 +652,8 @@ stds.balanced_nutrients = {
 	read_globals = {
 		"fmod",
 		"balanced_diet",
-		"hp_monoids",
 		"petz",
+		"player_attributes",
 		"player_monoids",
 		"staminoid",
 		"std_effects",

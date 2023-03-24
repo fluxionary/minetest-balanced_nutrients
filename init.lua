@@ -1,5 +1,11 @@
 balanced_nutrients = fmod.create()
 
+local hp_attribute = player_attributes.get_bounded_attribute("hp")
+local regen_effect = std_effects.regen
+local strength_effect = std_effects.strength
+local stamina_attribute = staminoid.stamina_attribute
+local stamina_regen_effect = staminoid.stamina_regen_effect
+
 local function is_werewolf(player)
 	if std_effects.werewolf then
 		return std_effects.werewolf:value(player)
@@ -11,10 +17,10 @@ end
 balanced_diet.register_nutrient("fat", { -- raises maximum health, makes you slower
 	apply_value = function(player, value)
 		if value > 0 then
-			hp_monoids.hp_max:add_change(player, value / 2, "balanced_nutrients:fat")
+			hp_attribute:add_max(player, "balanced_nutrients:fat", value / 2)
 			player_monoids.speed:add_change(player, -value / 8, "balanced_nutrients:fat")
 		else
-			hp_monoids.hp_max:del_change(player, "balanced_nutrients:fat")
+			hp_attribute:clear_max(player, "balanced_nutrients:fat")
 			player_monoids.speed:del_change(player, "balanced_nutrients:fat")
 		end
 	end,
@@ -23,14 +29,18 @@ balanced_diet.register_nutrient("fat", { -- raises maximum health, makes you slo
 balanced_diet.register_nutrient("protein", { -- raises health regeneration, makes you stronger
 	apply_value = function(player, value)
 		if value > 0 then
-			hp_monoids.heal:add_change(player, value / 2, "balanced_nutrients:protein")
-			if std_effects.strength then
-				std_effects.strength:add(player, value / 2, "balanced_nutrients:protein")
+			if regen_effect then
+				regen_effect:add(player, "balanced_nutrients:protein", value / 2)
+			end
+			if strength_effect then
+				strength_effect:add(player, "balanced_nutrients:protein", value / 2)
 			end
 		else
-			hp_monoids.heal:del_change(player, "balanced_nutrients:protein")
-			if std_effects.strength then
-				std_effects.strength:clear(player, "balanced_nutrients:protein")
+			if regen_effect then
+				regen_effect:del_change(player, "balanced_nutrients:protein")
+			end
+			if strength_effect then
+				strength_effect:clear(player, "balanced_nutrients:protein")
 			end
 		end
 	end,
@@ -39,18 +49,18 @@ balanced_diet.register_nutrient("protein", { -- raises health regeneration, make
 balanced_diet.register_nutrient("carbohydrate", { -- raises maximum stamina
 	apply_value = function(player, value)
 		if value > 0 and not is_werewolf(player) then
-			staminoid.stamina_max_monoid:add_change(player, value / 2, "balanced_nutrients:carbohydrate")
+			stamina_attribute:add_max(player, "balanced_nutrients:carbohydrate", value / 2)
 		else
-			staminoid.stamina_max_monoid:del_change(player, "balanced_nutrients:carbohydrate")
+			stamina_attribute:del_max(player, "balanced_nutrients:carbohydrate")
 		end
 	end,
 })
 balanced_diet.register_nutrient("vitamin", { -- rises stamina regeneration
 	apply_value = function(player, value)
 		if value > 0 then
-			staminoid.stamina_regen_monoid:add_change(player, value / 2, "balanced_nutrients:vitamin")
+			stamina_regen_effect:add(player, "balanced_nutrients:vitamin", value / 2)
 		else
-			staminoid.stamina_regen_monoid:del_change(player, "balanced_nutrients:vitamin")
+			stamina_regen_effect:clear(player, "balanced_nutrients:vitamin")
 		end
 	end,
 })
@@ -65,11 +75,11 @@ balanced_diet.register_nutrient("raw_meat", { -- poison for regular players, rai
 	end,
 	apply_value = function(player, value)
 		if value > 0 and is_werewolf(player) then
-			staminoid.stamina_max_monoid:add_change(player, value / 2, "balanced_nutrients:raw_meat")
-			staminoid.stamina_regen_monoid:add_change(player, value / 2, "balanced_nutrients:raw_meat")
+			stamina_attribute:add_max(player, "balanced_nutrients:raw_meat", value / 2)
+			stamina_regen_effect:add(player, "balanced_nutrients:raw_meat", value / 2)
 		else
-			staminoid.stamina_max_monoid:del_change(player, "balanced_nutrients:raw_meat")
-			staminoid.stamina_regen_monoid:del_change(player, "balanced_nutrients:raw_meat")
+			stamina_attribute:del_max(player, "balanced_nutrients:raw_meat")
+			stamina_regen_effect:clear(player, "balanced_nutrients:raw_meat")
 		end
 	end,
 })
