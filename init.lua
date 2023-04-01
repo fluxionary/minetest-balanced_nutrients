@@ -1,5 +1,7 @@
 balanced_nutrients = fmod.create()
 
+local S = balanced_nutrients.S
+
 local hp_attribute = player_attributes.get_bounded_attribute("hp")
 local regen_effect = std_effects.regen
 local strength_effect = std_effects.strength
@@ -15,6 +17,7 @@ local function is_werewolf(player)
 end
 
 balanced_diet.register_nutrient("fat", { -- raises maximum health, makes you slower
+	description = S("fat"),
 	apply_value = function(player, value)
 		if value > 0 then
 			hp_attribute:add_max(player, "balanced_nutrients:fat", value)
@@ -27,6 +30,7 @@ balanced_diet.register_nutrient("fat", { -- raises maximum health, makes you slo
 })
 
 balanced_diet.register_nutrient("protein", { -- raises health regeneration, makes you stronger
+	description = S("protein"),
 	apply_value = function(player, value)
 		if value > 0 then
 			if regen_effect then
@@ -47,6 +51,7 @@ balanced_diet.register_nutrient("protein", { -- raises health regeneration, make
 })
 
 balanced_diet.register_nutrient("carbohydrate", { -- raises maximum stamina
+	description = S("carbohydrate"),
 	apply_value = function(player, value)
 		if value > 0 and not is_werewolf(player) then
 			stamina_attribute:add_max(player, "balanced_nutrients:carbohydrate", 10 * value)
@@ -56,9 +61,10 @@ balanced_diet.register_nutrient("carbohydrate", { -- raises maximum stamina
 	end,
 })
 balanced_diet.register_nutrient("vitamin", { -- raises stamina regeneration
+	description = S("vitamin"),
 	apply_value = function(player, value)
 		if value > 0 then
-			stamina_regen_effect:add(player, "balanced_nutrients:vitamin", value / 2)
+			stamina_regen_effect:add(player, "balanced_nutrients:vitamin", value)
 		else
 			stamina_regen_effect:clear(player, "balanced_nutrients:vitamin")
 		end
@@ -66,6 +72,7 @@ balanced_diet.register_nutrient("vitamin", { -- raises stamina regeneration
 })
 
 balanced_diet.register_nutrient("raw_meat", { -- poison for regular players, raises stamina/stamina regen for werewolves
+	description = S("raw meat"),
 	on_eat = function(player, value)
 		if not is_werewolf(player) then
 			if std_effects.poison then
