@@ -20,7 +20,7 @@ balanced_diet.register_nutrient("fat", { -- raises maximum health, makes you slo
 	description = S("fat"),
 	apply_value = function(player, value)
 		if value > 0 then
-			hp_attribute:add_max(player, "balanced_nutrients:fat", value)
+			hp_attribute:add_max(player, "balanced_nutrients:fat", math.round(value))
 			player_monoids.speed:add_change(player, 1 - math.min(1 / 6, value / 16), "balanced_nutrients:fat")
 		else
 			hp_attribute:clear_max(player, "balanced_nutrients:fat")
