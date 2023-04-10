@@ -656,6 +656,9 @@ stds.balanced_nutrients = {
 		"player_attributes",
 		"player_monoids",
 		"staminoid",
-		"std_effects",
+		"regen_effect",
+		"strength_effect",
+		"lycanthropy_effect",
+		"poison_effect",
 	},
 }

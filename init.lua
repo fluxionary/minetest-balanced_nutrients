@@ -3,14 +3,14 @@ balanced_nutrients = fmod.create()
 local S = balanced_nutrients.S
 
 local hp_attribute = player_attributes.get_bounded_attribute("hp")
-local regen_effect = std_effects.regen
-local strength_effect = std_effects.strength
+local regen_effect = regen_effect.effect
+local strength_effect = strength_effect.effect
 local stamina_attribute = staminoid.stamina_attribute
 local stamina_regen_effect = staminoid.stamina_regen_effect
 
 local function is_werewolf(player)
-	if std_effects.werewolf then
-		return std_effects.werewolf:value(player)
+	if balanced_diet.has.lycanthropy_effect then
+		return lycanthropy_effect.werewolf:value(player)
 	elseif balanced_nutrients.has.petz then
 		return petz.is_werewolf(player)
 	end
@@ -77,8 +77,8 @@ balanced_diet.register_nutrient("raw_meat", { -- poison for regular players, rai
 	description = S("raw meat"),
 	on_eat = function(player, value)
 		if not is_werewolf(player) then
-			if std_effects.poison then
-				std_effects.poison:add_time(player, "balanced_nutrients:raw_meat", 1, value)
+			if balanced_nutrients.has.poison_effect then
+				poison_effect.effect:add_time(player, "balanced_nutrients:raw_meat", 1, value)
 			end
 		end
 	end,
