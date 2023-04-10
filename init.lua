@@ -65,7 +65,7 @@ balanced_diet.register_nutrient("carbohydrate", { -- raises maximum stamina
 balanced_diet.register_nutrient("vitamin", { -- raises stamina regeneration
 	description = S("vitamin"),
 	apply_value = function(player, value)
-		if value > 0 then
+		if value > 0 and not is_werewolf(player) then
 			stamina_regen_effect:add(player, "balanced_nutrients:vitamin", value)
 		else
 			stamina_regen_effect:clear(player, "balanced_nutrients:vitamin")
@@ -85,7 +85,7 @@ balanced_diet.register_nutrient("raw_meat", { -- poison for regular players, rai
 	apply_value = function(player, value)
 		if value > 0 and is_werewolf(player) then
 			stamina_attribute:add_max(player, "balanced_nutrients:raw_meat", 10 * value)
-			stamina_regen_effect:add(player, "balanced_nutrients:raw_meat", value)
+			stamina_regen_effect:add(player, "balanced_nutrients:raw_meat", 2 * value)
 			if regen_effect then
 				regen_effect:add(player, "balanced_nutrients:raw_meat", value / 2)
 			end
