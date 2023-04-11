@@ -11,7 +11,7 @@ local stamina_regen_effect = staminoid.stamina_regen_effect
 local function is_werewolf(player)
 	if balanced_diet.has.lycanthropy_effect then
 		return lycanthropy_effect.werewolf:value(player)
-	elseif balanced_nutrients.has.petz then
+	elseif balanced_nutrients.has.petz and petz.settings.lycanthropy then
 		return petz.is_werewolf(player)
 	end
 end
